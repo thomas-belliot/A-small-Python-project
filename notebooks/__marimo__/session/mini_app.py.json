@@ -33,7 +33,7 @@
     },
     {
       "id": "vblA",
-      "code_hash": "65e68367244f5be40bd56cfca8fb98d8",
+      "code_hash": "f7656851549e3f2d761d6e0b27b60786",
       "outputs": [
         {
           "type": "data",
@@ -91,20 +91,20 @@
       "console": []
     },
     {
-      "id": "JZCP",
-      "code_hash": "d91b4e483e8ef7bfd1f64e09dea46c0d",
+      "id": "Xref",
+      "code_hash": "1f73e2d3e421bd53985736e6394cebca",
       "outputs": [
         {
           "type": "data",
           "data": {
-            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">A = (xA, yA), B = (xB, yB), P = (x, y) (pixel) are organized this way<br />\n    A<br />\nP -----<br />\n    B<br />\n(yA &gt; y) != (yB &gt; y) \u2192 Check if A and B are on both side of the line starting from P<br />\nWe should have  yA &gt; y \u2192 False and yB &gt; y \u2192 True</span>\n<span class=\"paragraph\">And (xB - xA) * (y - yA) / (yB - yA) + xA calculates the coordinate X of the point where the side of the hexagon meets the horizontal line y (we check if the intersection is to the right of the point), i.e. this value must be positive if P is on the left compare to [A,B].</span>\n<span class=\"paragraph\">The full method is explained <a href=\"https://www.geeksforgeeks.org/c/point-in-polygon-in-c/#method-1-using-ray-casting-algorithm\" rel=\"noopener noreferrer\" target=\"_blank\">here</a></span></span>"
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><span class=\"paragraph\">A = (xA, yA), B = (xB, yB), P = (x, y) (pixel) are organized this way\n    A\nP -----\n    B\n(yA &gt; y) != (yB &gt; y) \u2192 Check if A and B are on both side of the line starting from P\nWe should have  yA &gt; y \u2192 False and yB &gt; y \u2192 True</span>\n<span class=\"paragraph\">And (xB - xA) * (y - yA) / (yB - yA) + xA calculates the coordinate X of the point where the side of the hexagon meets the horizontal line y (we check if the intersection is to the right of the point), i.e. this value must be positive if P is on the left compare to [A,B].</span>\n<span class=\"paragraph\">The full method is explained <a href=\"https://www.geeksforgeeks.org/c/point-in-polygon-in-c/#method-1-using-ray-casting-algorithm\" rel=\"noopener noreferrer\" target=\"_blank\">here</a></span></span>"
           }
         }
       ],
       "console": []
     },
     {
-      "id": "Xref",
+      "id": "SFPL",
       "code_hash": "b9f168db78271269b1ec6209b128a04e",
       "outputs": [
         {
@@ -117,7 +117,7 @@
       "console": []
     },
     {
-      "id": "KGtb",
+      "id": "BYtC",
       "code_hash": "22cf294cfde798ddada0190db26b1f10",
       "outputs": [
         {
@@ -130,7 +130,7 @@
       "console": []
     },
     {
-      "id": "BYtC",
+      "id": "RGSE",
       "code_hash": "f07a2d28d7962701e8adb88f95b10b30",
       "outputs": [
         {
@@ -143,7 +143,7 @@
       "console": []
     },
     {
-      "id": "RGSE",
+      "id": "Kclp",
       "code_hash": "8aa710dc87a89bf815a623530db690f1",
       "outputs": [
         {
@@ -156,7 +156,7 @@
       "console": []
     },
     {
-      "id": "Kclp",
+      "id": "emfo",
       "code_hash": "d65f04a6c65a461b513baa74a209e02c",
       "outputs": [
         {
@@ -169,8 +169,8 @@
       "console": []
     },
     {
-      "id": "uWwt",
-      "code_hash": "294837ef45d203f61934d973682c9d44",
+      "id": "Hstk",
+      "code_hash": "63eada04e959ae896feebe639454de48",
       "outputs": [
         {
           "type": "data",
@@ -182,7 +182,7 @@
       "console": []
     },
     {
-      "id": "emfo",
+      "id": "nWHF",
       "code_hash": "8789b60ffee84904883350e241160092",
       "outputs": [
         {
@@ -195,7 +195,7 @@
       "console": []
     },
     {
-      "id": "Hstk",
+      "id": "iLit",
       "code_hash": "9f1d40fc3a8b438bf94589e6e7eb5afe",
       "outputs": [
         {
@@ -208,8 +208,8 @@
       "console": []
     },
     {
-      "id": "sTAe",
-      "code_hash": "51113a94dd9522c5f77ff88948124faa",
+      "id": "ZHCJ",
+      "code_hash": "a7477e20bdb9080cc8226037b25b7d67",
       "outputs": [
         {
           "type": "data",

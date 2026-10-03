@@ -27,6 +27,9 @@ def _(Image):
         return Image.open(filename)
 
     image = load_image("img/image.jpg")
+    assert(image.size == (900, 506))
+    assert(image.mode == "RGB")
+    assert(image.getpixel((0, 0)) == (22, 199, 232))
     image
     return image, load_image
 
@@ -42,14 +45,10 @@ def _(image):
 
 
 @app.cell
-def _(image, sqrt):
-    HEX_SIZE = 20 # Choose the size of the hexagone (as defined here : https://www.redblobgames.com/grids/hexagons/)
-    length, high = image.size
-
-
+def _(sqrt):
     # I choose the pointy top orientation
     def hexagon_center(row: int, column: int, size: float) -> tuple[float, float]:
-        """ Given a row, a column and the radius (size), return the center of the hexagone for this location and size """
+        """ Given a row, a column and the radius (size), return the center of the hexagon for this location and size """
         x = sqrt(3) * size * (column + 1/2 + 1/2 * (row % 2)) # The vertical distance is vert = sqrt(3) * size
         y = size * (1 + 3/2*row) # the horizontal distance between adjacent hexagon centers is horiz = 3/2 * size
         return x, y
@@ -57,7 +56,7 @@ def _(image, sqrt):
     assert(hexagon_center(0, 0, 20) == (20*sqrt(3)/2, 20) )
     assert(hexagon_center(0, 1, 20) == (20*sqrt(3)*(1/2+1), 20) )
     assert(hexagon_center(1, 0, 20) == (20*sqrt(3), 20*(1+3/2))) 
-    assert( hexagon_center(10, 5, 20) == (20*sqrt(3)*(5+1/2+1/2*(10%2)), 20*(1+10*3/2)))
+    assert(hexagon_center(10, 5, 20) == (20*sqrt(3)*(5+1/2+1/2*(10%2)), 20*(1+10*3/2)))
     return
 
 
@@ -65,7 +64,7 @@ def _(image, sqrt):
 def _(cos, pi, sin):
     # Taken from https://www.redblobgames.com/grids/hexagons/, "Angles" section
     def hexagon_points(cx: float, cy: float, size: float) -> list[tuple[float, float]]:
-        """Calculate the extremitiy points of an hexagone, given the center of this hexagone.
+        """Calculate the extremitiy points of an hexagon, given the center of this hexagon.
         Order of the points : start at the bottom right (pointy top orientation), and turns by the left"""
         hexa_extremity = []
         for i in range(6):
@@ -117,8 +116,8 @@ def _(hexagon_points):
         return x < x_intersection
 
     def is_point_in_hexagon(x: float, y: float, cx: float, cy: float, size: float) -> bool:
-        """Decide wether the point x, y is inside the hexagone defined by its center (cx, cy) and its size
-        Formula based on the ()
+        """Decide whether the point x, y is inside the hexagon defined by its center (cx, cy) and its size
+        Formula based on the Ray Casting method
         The method consists of mentally drawing a horizontal half-right from the point to the right and counting the number of sides of
         the polygon that it passes through. Odd number → interior ; even number → outside.
         """
@@ -160,7 +159,7 @@ def _(image):
 @app.cell
 def _(Image, image, is_point_in_hexagon, sqrt):
     def sample_color(image: Image.Image,cx: float,cy: float,size: float,) -> tuple[int, int, int]:
-        """ Sample the color for the hexagone with center at position (cx, cy) """
+        """ Sample the color for the hexagon with center at position (cx, cy) """
         pixels: list[tuple[int, int, int]] = []
 
         min_x = max(0, int(cx - sqrt(3)*size/2))
@@ -174,7 +173,7 @@ def _(Image, image, is_point_in_hexagon, sqrt):
                 if is_point_in_hexagon(x, y, cx, cy, size):
                     pixels.append(image.getpixel((x, y)))
 
-        if len(pixels) == 0: # If there is not a single point in the hexagone
+        if len(pixels) == 0: # If there is not a single point in the hexagon
             return (0, 0, 0)
 
         red = sum(pixel[0] for pixel in pixels) // len(pixels)
@@ -229,7 +228,7 @@ def _(hexagon_points, rgb_to_hex):
 def _(Image, generate_hexagon, sample_color, sqrt):
     def generate_svg(image: Image.Image, size: float) -> str:
         """ Generate the content of the svg file for the given image """
-    
+
         width, height = image.size
 
         polygons = []
@@ -239,7 +238,7 @@ def _(Image, generate_hexagon, sample_color, sqrt):
             cy = size*(1+1.5*row)
             if cy >= height + size: # Out of the image
                 break
-            
+    
             column = 0
 
             while True:
@@ -293,7 +292,7 @@ def _(generate_svg, load_image):
 
 @app.cell
 def _(convert):
-    convert("img/image.jpg", "img/test.svg")
+    convert("img/image.jpg", "img/test3.svg")
     return
 
 
