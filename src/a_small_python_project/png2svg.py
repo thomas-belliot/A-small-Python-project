@@ -16,8 +16,10 @@ def load_image(filename: str) -> Image.Image:
 
 
 def hexagon_center(row: int, column: int, size: float) -> tuple[float, float]:
-    """Given a row, a column and the size of the hexagon (size), return the center of the hexagon for this location and size
-    Look at the 'Notes.pdf' file in the 'img' folder tounderstand the formula. I chose the pointy top orientation.
+    """Given a row, a column and the size of the hexagon (size), return the center
+    of the hexagon for this location and size
+    Look at the 'Notes.pdf' file in the 'img' folder tounderstand the formula.
+    I chose the pointy top orientation.
     Returns:
         tuple[float, float]: Center of the hexagon at a given (row, column)
     """
@@ -33,7 +35,8 @@ def hexagon_center(row: int, column: int, size: float) -> tuple[float, float]:
 def hexagon_points(cx: float, cy: float, size: float) -> list[tuple[float, float]]:
     """Calculate the extremitiy points of an hexagon, given the center of this hexagon and its size.
     Order of the points : start at the bottom right (pointy top orientation), and turns by the left
-    Taken from https://www.redblobgames.com/grids/hexagons/, "Angles" section. I chose the pointy top orientation.
+    Taken from https://www.redblobgames.com/grids/hexagons/, "Angles" section. I chose the pointy
+    top orientation.
 
     Returns:
         list[tuple[float, float]]: The six points which represent the extremity of the hexagon
@@ -46,11 +49,9 @@ def hexagon_points(cx: float, cy: float, size: float) -> list[tuple[float, float
     return hexa_extremity
 
 
-def ray_intersects_edge(
-    x: float, y: float, xi: float, yi: float, xj: float, yj: float
-) -> bool:
-    """Intermediate function to calulate whether a point P(x,y) is between two points I(xi, yi) and J(j, yj).
-    Look at the notebook "mini_app.py" for more details
+def ray_intersects_edge(x: float, y: float, xi: float, yi: float, xj: float, yj: float) -> bool:
+    """Intermediate function to calulate whether a point P(x,y) is between two points I(xi, yi)
+    and J(j, yj). Look at the notebook "mini_app.py" for more details
 
     Args:
         x (float): x coordinate of P
@@ -74,17 +75,19 @@ def ray_intersects_edge(
 
 
 def is_point_in_hexagon(x: float, y: float, cx: float, cy: float, size: float) -> bool:
-    """Decide whether the point (x, y) is inside the hexagon defined by its center (cx, cy) and its size
-    Formula based on the Ray Casting method
-    The method consists of mentally drawing a horizontal half-right from the point to the right and counting the number of sides of
-    the polygon that it passes through. Odd number → interior ; even number → outside.
+    """Decide whether the point (x, y) is inside the hexagon defined by its center (cx, cy) and
+    its size. Formula based on the Ray Casting method.
+    The method consists of mentally drawing a horizontal half-right from the point to the right
+    and counting the number of sides of the polygon that it passes through.
+    Odd number → interior ; even number → outside.
 
     Args:
         x (float): x coordinate of the point to consider
         y (float): y coordinate of the point to consider
         cx (float): x value for the center of the hexagon
         cy (float): y value for the center of the hexagon
-        size (float): size of the hexagon as defined here : https://www.redblobgames.com/grids/hexagons/ (pointy top orientation)
+        size (float): size of the hexagon as defined here :
+                    https://www.redblobgames.com/grids/hexagons/ (pointy top orientation)
 
     Returns:
         bool: if the point is inside the hexagon or not
@@ -127,10 +130,12 @@ def sample_color(
         image (Image.Image): image where we consider the pixels
         cx (float): x value for the center of the hexagon
         cy (float): y value for the center of the hexagon
-        size (float): size of the hexagon as defined here : https://www.redblobgames.com/grids/hexagons/ (pointy top orientation)
+        size (float): size of the hexagon as defined here :
+                    https://www.redblobgames.com/grids/hexagons/ (pointy top orientation)
 
     Returns:
-        tuple[int, int, int]: RGB values which average the color of the pixels inside the hexagon in the image
+        tuple[int, int, int]: RGB values which average the color of the pixels inside
+                            the hexagon in the image
     """
 
     pixels = []
@@ -178,20 +183,20 @@ def rgb_to_hex(rgb: tuple[int, int, int]) -> str:
     return f"#{red:02x}{green:02x}{blue:02x}"
 
 
-def generate_hexagon(
-    cx: float, cy: float, size: float, rgb: tuple[int, int, int]
-) -> str:
-    """Create an hexagon by returning the extremity of the hexagon, and it's color according to svg format
+def generate_hexagon(cx: float, cy: float, size: float, rgb: tuple[int, int, int]) -> str:
+    """Create an hexagon by returning the extremity of the hexagon, and it's color according
+    to svg format
 
     Args:
         cx (float): x value for the center of the hexagon
         cy (float): y value for the center of the hexagon
-        size (float): size of the hexagon as defined here : https://www.redblobgames.com/grids/hexagons/ (pointy top orientation)
+        size (float): size of the hexagon as defined here :
+                    https://www.redblobgames.com/grids/hexagons/ (pointy top orientation)
         rgb (tuple[int, int, int]): The RGB value for this hexagon
 
     Returns:
         str: svg format description of the hexagon
-        ex of output : <polygon points="17.32,10.00 0.00,20.00 -17.32,10.00 -17.32,-10.00 0.00,-20.00 17.32,-10.00" fill="#7f543f" />
+        ex of output : <polygon points="17.32,(...) 17.32,-10.00" fill="#7f543f" />
     """
     points = hexagon_points(cx, cy, size)
 
@@ -251,7 +256,8 @@ def generate_svg(image: Image.Image, size: float) -> str:
 
 
 def convert(input_filename: str, output_filename: str, size: float = 20) -> None:
-    """Open an image at location 'input_filename', convert it into svg file, and save the result at location 'output_filename'
+    """Open an image at location 'input_filename', convert it into svg file, and save the
+    result at location 'output_filename'
 
     Args:
         input_filename (str): Location of the image to transform

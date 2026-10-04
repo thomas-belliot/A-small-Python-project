@@ -48,12 +48,13 @@ def _(image):
 def _(sqrt):
     # I choose the pointy top orientation
     def hexagon_center(row: int, column: int, size: float) -> tuple[float, float]:
-        """Given a row, a column and the radius (size), return the center of the hexagon for this location and size"""
+        """Given a row, a column and the radius (size), return the center of the hexagon for
+        this location and size"""
         x = (
             sqrt(3) * size * (column + 1 / 2 + 1 / 2 * (row % 2))
         )  # The vertical distance is vert = sqrt(3) * size
-        y = (
-            size * (1 + 3 / 2 * row)
+        y = size * (
+            1 + 3 / 2 * row
         )  # the horizontal distance between adjacent hexagon centers is horiz = 3/2 * size
         return x, y
 
@@ -71,14 +72,13 @@ def _(cos, pi, sin):
     # Taken from https://www.redblobgames.com/grids/hexagons/, "Angles" section
     def hexagon_points(cx: float, cy: float, size: float) -> list[tuple[float, float]]:
         """Calculate the extremitiy points of an hexagon, given the center of this hexagon.
-        Order of the points : start at the bottom right (pointy top orientation), and turns by the left"""
+        Order of the points : start at the bottom right (pointy top orientation), and turns
+        by the left"""
         hexa_extremity = []
         for i in range(6):
             angle_deg = 60 * i - 30  # °
             angle_rad = pi / 180 * angle_deg
-            hexa_extremity.append(
-                (cx + size * cos(angle_rad), cy + size * sin(angle_rad))
-            )
+            hexa_extremity.append((cx + size * cos(angle_rad), cy + size * sin(angle_rad)))
         return hexa_extremity
 
     test = hexagon_points(4.96, 8.68, 10)
@@ -102,7 +102,10 @@ def _(mo):
     (yA > y) != (yB > y) → Check if A and B are on both side of the line starting from P
     We should have  yA > y → False and yB > y → True
 
-    And (xB - xA) * (y - yA) / (yB - yA) + xA calculates the coordinate X of the point where the side of the hexagon meets the horizontal line y (we check if the intersection is to the right of the point), i.e. this value must be positive if P is on the left compare to [A,B].
+    And (xB - xA) * (y - yA) / (yB - yA) + xA calculates the coordinate X of the point
+    where the side of the hexagon meets the horizontal line y (we check if the intersection
+    is to the right of the point), i.e. this value must be positive if P is on the left
+    compare to [A,B].
 
     The full method is explained [here](https://www.geeksforgeeks.org/c/point-in-polygon-in-c/#method-1-using-ray-casting-algorithm)
     """)
@@ -110,9 +113,7 @@ def _(mo):
 
 @app.cell
 def _(hexagon_points):
-    def ray_intersects_edge(
-        x: float, y: float, xi: float, yi: float, xj: float, yj: float
-    ) -> bool:
+    def ray_intersects_edge(x: float, y: float, xi: float, yi: float, xj: float, yj: float) -> bool:
 
         # Does the segment cross the height of the point?
         crosses_y = (yi > y) != (yj > y)
@@ -126,12 +127,12 @@ def _(hexagon_points):
         # Is the intersection to the right of the point?
         return x < x_intersection
 
-    def is_point_in_hexagon(
-        x: float, y: float, cx: float, cy: float, size: float
-    ) -> bool:
-        """Decide whether the point x, y is inside the hexagon defined by its center (cx, cy) and its size
+    def is_point_in_hexagon(x: float, y: float, cx: float, cy: float, size: float) -> bool:
+        """Decide whether the point x, y is inside the hexagon defined by its center (cx, cy) and
+        its size
         Formula based on the Ray Casting method
-        The method consists of mentally drawing a horizontal half-right from the point to the right and counting the number of sides of
+        The method consists of mentally drawing a horizontal half-right from the point to the right
+        and counting the number of sides of
         the polygon that it passes through. Odd number → interior ; even number → outside.
         """
 
@@ -165,8 +166,8 @@ def _(hexagon_points):
     y_True = [2, 14, 16, 16, 0, 10, 8]
 
     for k in range(len(x_False)):
-        assert is_point_in_hexagon(x_True[k], y_True[k], 4.96, 8.68, 10) == True
-        assert is_point_in_hexagon(x_False[k], y_False[k], 4.96, 8.68, 10) == False
+        assert is_point_in_hexagon(x_True[k], y_True[k], 4.96, 8.68, 10)
+        assert is_point_in_hexagon(x_False[k], y_False[k], 4.96, 8.68, 10)
     return (is_point_in_hexagon,)
 
 
@@ -230,11 +231,10 @@ def _():
 
 @app.cell
 def _(hexagon_points, rgb_to_hex):
-    def generate_hexagon(
-        cx: float, cy: float, size: float, rgb: tuple[int, int, int]
-    ) -> str:
-        """Create an hexagon by returning the extremity of the hexagon, and it's color with svg format
-        ex of output : <polygon points="17.32,10.00 0.00,20.00 -17.32,10.00 -17.32,-10.00 0.00,-20.00 17.32,-10.00" fill="#7f543f" />
+    def generate_hexagon(cx: float, cy: float, size: float, rgb: tuple[int, int, int]) -> str:
+        """Create an hexagon by returning the extremity of the hexagon, and it's color with
+        svg format
+        ex of output : <polygon points="17.32,(...) 17.32,-10.00" fill="#7f543f" />
         """
         points = hexagon_points(cx, cy, size)
 
@@ -305,10 +305,9 @@ def _(mo):
 
 @app.cell
 def _(generate_svg, load_image):
-    def convert(
-        input_filename: str, output_filename: str, hex_size: float = 20
-    ) -> None:
-        """This functions open an image at location 'input_filename', and convert it into svg file"""
+    def convert(input_filename: str, output_filename: str, hex_size: float = 20) -> None:
+        """This functions open an image at location 'input_filename',
+        and convert it into svg file"""
         image = load_image(input_filename)
 
         svg_content = generate_svg(image, hex_size)
