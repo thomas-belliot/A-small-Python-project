@@ -1,5 +1,7 @@
+from math import cos, pi, sin, sqrt
+
 from PIL import Image
-from math import sqrt, cos, sin, pi
+
 
 def load_image(filename: str) -> Image.Image:
     """Load the image located at "filename"
@@ -12,19 +14,24 @@ def load_image(filename: str) -> Image.Image:
     """
     return Image.open(filename)
 
+
 def hexagon_center(row: int, column: int, size: float) -> tuple[float, float]:
     """Given a row, a column and the size of the hexagon (size), return the center of the hexagon for this location and size
     Look at the 'Notes.pdf' file in the 'img' folder tounderstand the formula. I chose the pointy top orientation.
     Returns:
         tuple[float, float]: Center of the hexagon at a given (row, column)
     """
-    x = sqrt(3) * size * (column + 1/2 + 1/2 * (row % 2)) # The vertical distance is vert = sqrt(3) * size
-    y = size * (1 + 3/2*row) # the horizontal distance between adjacent hexagon centers is horiz = 3/2 * size
+    x = (
+        sqrt(3) * size * (column + 1 / 2 + 1 / 2 * (row % 2))
+    )  # The vertical distance is vert = sqrt(3) * size
+    y = size * (
+        1 + 3 / 2 * row
+    )  # the horizontal distance between adjacent hexagon centers is horiz = 3/2 * size
     return x, y
 
 
 def hexagon_points(cx: float, cy: float, size: float) -> list[tuple[float, float]]:
-    """ Calculate the extremitiy points of an hexagon, given the center of this hexagon and its size.
+    """Calculate the extremitiy points of an hexagon, given the center of this hexagon and its size.
     Order of the points : start at the bottom right (pointy top orientation), and turns by the left
     Taken from https://www.redblobgames.com/grids/hexagons/, "Angles" section. I chose the pointy top orientation.
 
@@ -33,13 +40,16 @@ def hexagon_points(cx: float, cy: float, size: float) -> list[tuple[float, float
     """
     hexa_extremity = []
     for i in range(6):
-        angle_deg = 60 * i - 30 # °
+        angle_deg = 60 * i - 30  # °
         angle_rad = pi / 180 * angle_deg
-        hexa_extremity.append((cx + size*cos(angle_rad), cy + size*sin(angle_rad)))
+        hexa_extremity.append((cx + size * cos(angle_rad), cy + size * sin(angle_rad)))
     return hexa_extremity
 
-def ray_intersects_edge(x: float,y: float, xi: float,yi: float,xj: float,yj: float) -> bool:
-    """ Intermediate function to calulate whether a point P(x,y) is between two points I(xi, yi) and J(j, yj).
+
+def ray_intersects_edge(
+    x: float, y: float, xi: float, yi: float, xj: float, yj: float
+) -> bool:
+    """Intermediate function to calulate whether a point P(x,y) is between two points I(xi, yi) and J(j, yj).
     Look at the notebook "mini_app.py" for more details
 
     Args:
@@ -58,9 +68,10 @@ def ray_intersects_edge(x: float,y: float, xi: float,yi: float,xj: float,yj: flo
     if not crosses_y:
         return False
     # Where does the segment meet the horizontal line there?
-    x_intersection = ( (xj - xi) * (y - yi) / (yj - yi) + xi )
+    x_intersection = (xj - xi) * (y - yi) / (yj - yi) + xi
     # Is the intersection to the right of the point?
     return x < x_intersection
+
 
 def is_point_in_hexagon(x: float, y: float, cx: float, cy: float, size: float) -> bool:
     """Decide whether the point (x, y) is inside the hexagon defined by its center (cx, cy) and its size
@@ -88,7 +99,14 @@ def is_point_in_hexagon(x: float, y: float, cx: float, cy: float, size: float) -
         xi, yi = hexa_extremity[i]
         xj, yj = hexa_extremity[j]
 
-        if ray_intersects_edge(x, y,xi, yi,xj, yj,):
+        if ray_intersects_edge(
+            x,
+            y,
+            xi,
+            yi,
+            xj,
+            yj,
+        ):
             inside = not inside
             # number of even crossings → False
             # number of odd crossings → True
@@ -96,9 +114,15 @@ def is_point_in_hexagon(x: float, y: float, cx: float, cy: float, size: float) -
 
     return inside
 
-def sample_color(image: Image.Image,cx: float,cy: float,size: float,) -> tuple[int, int, int]:
+
+def sample_color(
+    image: Image.Image,
+    cx: float,
+    cy: float,
+    size: float,
+) -> tuple[int, int, int]:
     """Sample the color for the hexagon with center at position (cx, cy) and with a given size
-    
+
     Args:
         image (Image.Image): image where we consider the pixels
         cx (float): x value for the center of the hexagon
@@ -108,11 +132,11 @@ def sample_color(image: Image.Image,cx: float,cy: float,size: float,) -> tuple[i
     Returns:
         tuple[int, int, int]: RGB values which average the color of the pixels inside the hexagon in the image
     """
-    
-    pixels: list[tuple[int, int, int]] = []
 
-    min_x = max(0, int(cx - sqrt(3)*size/2))
-    max_x = min(image.width - 1, int(cx + sqrt(3)*size/2))
+    pixels = []
+
+    min_x = max(0, int(cx - sqrt(3) * size / 2))
+    max_x = min(image.width - 1, int(cx + sqrt(3) * size / 2))
 
     min_y = max(0, int(cy - size))
     max_y = min(image.height - 1, int(cy + size))
@@ -122,14 +146,24 @@ def sample_color(image: Image.Image,cx: float,cy: float,size: float,) -> tuple[i
             if is_point_in_hexagon(x, y, cx, cy, size):
                 pixels.append(image.getpixel((x, y)))
 
-    if len(pixels) == 0: # If there is not a single point in the hexagon
+    if len(pixels) == 0:  # If there is not a single point in the hexagon
         return (0, 0, 0)
 
-    red = sum(pixel[0] for pixel in pixels) // len(pixels)
-    green = sum(pixel[1] for pixel in pixels) // len(pixels)
-    blue = sum(pixel[2] for pixel in pixels) // len(pixels)
+    red = 0
+    green = 0
+    blue = 0
+
+    for pixel in pixels:
+        if isinstance(pixel, tuple):
+            red += pixel[0]
+            green += pixel[1]
+            blue += pixel[2]
+    red = red // len(pixels)
+    green = green // len(pixels)
+    blue = blue // len(pixels)
 
     return red, green, blue
+
 
 def rgb_to_hex(rgb: tuple[int, int, int]) -> str:
     """Just a conversion from rgb to hexadecimal
@@ -143,9 +177,12 @@ def rgb_to_hex(rgb: tuple[int, int, int]) -> str:
     red, green, blue = rgb
     return f"#{red:02x}{green:02x}{blue:02x}"
 
-def generate_hexagon(cx: float,cy: float,size: float,rgb: tuple[int, int, int]) -> str:
-    """ Create an hexagon by returning the extremity of the hexagon, and it's color according to svg format
-        
+
+def generate_hexagon(
+    cx: float, cy: float, size: float, rgb: tuple[int, int, int]
+) -> str:
+    """Create an hexagon by returning the extremity of the hexagon, and it's color according to svg format
+
     Args:
         cx (float): x value for the center of the hexagon
         cy (float): y value for the center of the hexagon
@@ -162,13 +199,11 @@ def generate_hexagon(cx: float,cy: float,size: float,rgb: tuple[int, int, int]) 
 
     color = rgb_to_hex(rgb)
 
-    return (
-        f'<polygon points="{points_string}" '
-        f'fill="{color}" />'
-    )
+    return f'<polygon points="{points_string}" fill="{color}" />'
+
 
 def generate_svg(image: Image.Image, size: float) -> str:
-    """ Generate the content of the svg file for the given image
+    """Generate the content of the svg file for the given image
 
     Args:
         image (Image.Image): The image to transform into svg
@@ -183,16 +218,21 @@ def generate_svg(image: Image.Image, size: float) -> str:
     row = 0
 
     while True:
-        cy = size*(1+1.5*row)
-        if cy >= height + size: # Out of the image
+        cy = size * (1 + 1.5 * row)
+        if cy >= height + size:  # Out of the image
             break
         column = 0
         while True:
             cx = sqrt(3) * size * (column + 0.5 + 0.5 * (row % 2))
-            if cx >= width + size: # Out of the image
+            if cx >= width + size:  # Out of the image
                 break
-            rgb = sample_color(image,cx,cy,size,)
-            polygon = generate_hexagon(cx,cy,size,rgb)
+            rgb = sample_color(
+                image,
+                cx,
+                cy,
+                size,
+            )
+            polygon = generate_hexagon(cx, cy, size, rgb)
             polygons.append(polygon)
             column += 1
         row += 1
@@ -209,8 +249,9 @@ def generate_svg(image: Image.Image, size: float) -> str:
         ]
     )
 
-def convert(input_filename: str,output_filename: str, size: float = 20) -> None:
-    """ Open an image at location 'input_filename', convert it into svg file, and save the result at location 'output_filename'
+
+def convert(input_filename: str, output_filename: str, size: float = 20) -> None:
+    """Open an image at location 'input_filename', convert it into svg file, and save the result at location 'output_filename'
 
     Args:
         input_filename (str): Location of the image to transform
