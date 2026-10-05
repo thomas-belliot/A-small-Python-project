@@ -16,6 +16,7 @@ dependencies = [
 
 [project.scripts]
 a-small-python-project = "a_small_python_project:main"
+convert-kata = "a_small_python_project.cli:main"
 
 [build-system]
 requires = ["uv_build>=0.12.17,<0.13.0"]

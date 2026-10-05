@@ -9,3 +9,7 @@ uv run ruff format .
 uv run ruff check .
 uv run mypy src
 uv run pytest --cov=src --cov-report=term-missing
+
+It is possible to convert an image from the command line interface using the command :
+uv run convert-kata [image_path] [--output_path]
+/!\ Do not forget to add the '.svg' at the end of the output_path
