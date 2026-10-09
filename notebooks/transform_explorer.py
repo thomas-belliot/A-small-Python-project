@@ -1,3 +1,10 @@
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "marimo>=0.25.1",
+#     "pillow>=12.3.0",
+# ]
+# ///
 import marimo
 
 __generated_with = "0.25.1"
@@ -8,44 +15,68 @@ app = marimo.App(width="medium")
 def _():
     import marimo as mo
 
-    from a_small_python_project.png2svg import convert, load_image
-
     mo.md(
         r"""
         # png2svg Explorer
-        Select the path to your image below and see the result
+        See an example of the transformer
        """
     )
-    return convert, load_image, mo
+    return mo
 
 
+"""
 @app.cell
 def _():
-    """src_path = mo.ui.text_area(placeholder="Enter the path to the image you want to process")
-    src_path"""
+    src_path = mo.ui.text_area(placeholder="Enter the path to the image you want to process")
+    src_path
     return
 
 
 @app.cell
 def _():
-    """save_path = mo.ui.text_area(placeholder="Enter the path where to store your processed image.
+    save_path = mo.ui.text_area(placeholder="Enter the path where to store your processed image.
     !!! Add the .svg atthe end !!!")
-    save_path"""
+    save_path
     return
-
-
-@app.cell
-def _(load_image):
-    src_path = "img/image.jpg"
-    save_path = "img/image2.svg"
-    img = load_image(src_path)  # src_path.value
-    return img, save_path, src_path
+"""
 
 
 @app.cell
 def _():
-    print("Here is your image")
+    from io import BytesIO
+    from urllib.request import urlopen
+
+    from PIL import Image
+
+    def load_image_from_url(url: str) -> Image.Image:
+        with urlopen(url) as response:
+            image_data = response.read()
+
+        return Image.open(BytesIO(image_data))
+
+    return (load_image_from_url,)
+
+
+@app.cell
+def _(mo):
+    public_dir = mo.notebook_location() / "public"
+
+    src_path = str(public_dir / "img" / "image.jpg")
+    save_path = str(public_dir / "image2.svg")
+
+    return src_path, save_path
+
+
+@app.cell
+def _():
+    """Here is the original image"""
     return
+
+
+@app.cell
+def _(load_image_from_url, src_path):
+    img = load_image_from_url(src_path)
+    return (img,)
 
 
 @app.cell
@@ -62,15 +93,25 @@ def _(mo):
 
 
 @app.cell
-def _(convert, save_path, size_hexagon, src_path):
-    convert(src_path, save_path, size_hexagon.value)  # save_image.value,
-    print("Image processed")
+def _():
+    """Here is the converted image with hexagons"""
     return
 
 
 @app.cell
-def _(mo, save_path):
-    mo.image(src=save_path)
+def _(img, size_hexagon):
+    from a_small_python_project.png2svg import generate_svg
+
+    svg_content = generate_svg(img, size_hexagon.value)
+
+    return (svg_content,)
+
+
+@app.cell
+def _(
+    mo, svg_content
+):  # Print the content of the SVG file, it is better than trying to import the converted image
+    mo.Html(svg_content)
     return
 
 

@@ -14,6 +14,7 @@ dependencies = [
     "pillow>=12.3.0",
 ]
 
+
 [project.scripts]
 a-small-python-project = "a_small_python_project:main"
 convert-kata = "a_small_python_project.cli:main"
@@ -58,3 +59,7 @@ source = ["src"]
 [tool.coverage.report]
 show_missing = true
 fail_under = 40
+
+[tool.marimo.runtime]
+pythonpath = ["src"]
+
