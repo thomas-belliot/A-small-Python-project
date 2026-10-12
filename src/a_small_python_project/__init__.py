@@ -30,6 +30,27 @@ from a_small_python_project.png2svg import (
 from a_small_python_project.png2svg import (
     sample_color as sample_color,
 )
+from a_small_python_project.png2svg_multi_orientation import (
+    convert_multi as convert_multi,
+)
+from a_small_python_project.png2svg_multi_orientation import (
+    generate_hexagon_multi as generate_hexagon_multi,
+)
+from a_small_python_project.png2svg_multi_orientation import (
+    generate_svg_multi as generate_svg_multi,
+)
+from a_small_python_project.png2svg_multi_orientation import (
+    hexagon_center_multi as hexagon_center_multi,
+)
+from a_small_python_project.png2svg_multi_orientation import (
+    hexagon_points_multi as hexagon_points_multi,
+)
+from a_small_python_project.png2svg_multi_orientation import (
+    is_point_in_hexagon_multi as is_point_in_hexagon_multi,
+)
+from a_small_python_project.png2svg_multi_orientation import (
+    sample_color_multi as sample_color_multi,
+)
 
 all = [
     "load_image",
@@ -42,6 +63,13 @@ all = [
     "generate_hexagon",
     "generate_svg",
     "convert",
+    "hexagon_center_multi",
+    "hexagon_points_multi",
+    "is_point_in_hexagon_multi",
+    "sample_color_multi",
+    "generate_hexagon_multi",
+    "generate_svg_multi",
+    "convert_multi",
 ]
 
 version = "0.1.0"

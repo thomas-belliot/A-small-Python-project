@@ -42,46 +42,73 @@ def _(image):
     print(image.getpixel((0, 0)))
     px = image.load()
     print(px[0, 0])
+    return
+
+
+@app.cell
+def _(image):
+    image
+    return
 
 
 @app.cell
 def _(sqrt):
-    # I choose the pointy top orientation
-    def hexagon_center(row: int, column: int, size: float) -> tuple[float, float]:
+    def hexagon_center(row: int, column: int, size: float, orientation: str) -> tuple[float, float]:
         """Given a row, a column and the radius (size), return the center of the hexagon for
-        this location and size"""
-        x = (
-            sqrt(3) * size * (column + 1 / 2 + 1 / 2 * (row % 2))
-        )  # The vertical distance is vert = sqrt(3) * size
-        y = size * (
-            1 + 3 / 2 * row
-        )  # the horizontal distance between adjacent hexagon centers is horiz = 3/2 * size
-        return x, y
+        this location and size (orientation in {pointy, flat})"""
+        if orientation == "pointy":
+            x = sqrt(3) * size * (column + 1 / 2 + 1 / 2 * (row % 2))
+            y = size * (1 + 3 / 2 * row)
+            return x, y
+        else:
+            x = size * (1 + 1.5 * column)
+            y = size * sqrt(3) * (row + 1 / 2 + 1 / 2 * (column % 2))
+            return x, y
 
-    assert hexagon_center(0, 0, 20) == (20 * sqrt(3) / 2, 20)
-    assert hexagon_center(0, 1, 20) == (20 * sqrt(3) * (1 / 2 + 1), 20)
-    assert hexagon_center(1, 0, 20) == (20 * sqrt(3), 20 * (1 + 3 / 2))
-    assert hexagon_center(10, 5, 20) == (
+    # Pointy top orientation
+    assert hexagon_center(0, 0, 20, "pointy") == (20 * sqrt(3) / 2, 20)
+    assert hexagon_center(0, 1, 20, "pointy") == (20 * sqrt(3) * (1 / 2 + 1), 20)
+    assert hexagon_center(1, 0, 20, "pointy") == (20 * sqrt(3), 20 * (1 + 3 / 2))
+    assert hexagon_center(10, 5, 20, "pointy") == (
         20 * sqrt(3) * (5 + 1 / 2 + 1 / 2 * (10 % 2)),
         20 * (1 + 10 * 3 / 2),
     )
+
+    # Flat top orientation
+    assert hexagon_center(0, 0, 20, "flat") == (20, sqrt(3) * 20 / 2)
+    assert hexagon_center(0, 1, 20, "flat") == (20 * 5 / 2, sqrt(3) * 20)
+    assert hexagon_center(1, 0, 20, "flat") == (20, sqrt(3) * 20 * (1 + 1 / 2))
+    assert hexagon_center(10, 5, 20, "flat") == (
+        20 * (1 + 1.5 * 5),
+        20 * sqrt(3) * (10 + 1 / 2 + 1 / 2 * (5 % 2)),
+    )
+    return
 
 
 @app.cell
 def _(cos, pi, sin):
     # Taken from https://www.redblobgames.com/grids/hexagons/, "Angles" section
-    def hexagon_points(cx: float, cy: float, size: float) -> list[tuple[float, float]]:
+    def hexagon_points(
+        cx: float, cy: float, size: float, orientation: str
+    ) -> list[tuple[float, float]]:
         """Calculate the extremitiy points of an hexagon, given the center of this hexagon.
         Order of the points : start at the bottom right (pointy top orientation), and turns
         by the left"""
         hexa_extremity = []
-        for i in range(6):
-            angle_deg = 60 * i - 30  # °
-            angle_rad = pi / 180 * angle_deg
-            hexa_extremity.append((cx + size * cos(angle_rad), cy + size * sin(angle_rad)))
+        if orientation == "pointy":
+            for i in range(6):
+                angle_deg = 60 * i - 30  # °
+                angle_rad = pi / 180 * angle_deg
+                hexa_extremity.append((cx + size * cos(angle_rad), cy + size * sin(angle_rad)))
+        else:
+            for i in range(6):
+                angle_deg = 60 * i  # °
+                angle_rad = pi / 180 * angle_deg
+                hexa_extremity.append((cx + size * cos(angle_rad), cy + size * sin(angle_rad)))
+            return hexa_extremity
         return hexa_extremity
 
-    test = hexagon_points(4.96, 8.68, 10)
+    test = hexagon_points(4.96, 8.68, 10, "pointy")
     test = [
         (round(test[k][0], 1), round(test[k][1], 1)) for k in range(len(test))
     ]  # I did not succeed to put the points exactly at the right place on Geogebra
@@ -109,12 +136,12 @@ def _(mo):
 
     The full method is explained [here](https://www.geeksforgeeks.org/c/point-in-polygon-in-c/#method-1-using-ray-casting-algorithm)
     """)
+    return
 
 
 @app.cell
 def _(hexagon_points):
     def ray_intersects_edge(x: float, y: float, xi: float, yi: float, xj: float, yj: float) -> bool:
-
         # Does the segment cross the height of the point?
         crosses_y = (yi > y) != (yj > y)
 
@@ -127,7 +154,9 @@ def _(hexagon_points):
         # Is the intersection to the right of the point?
         return x < x_intersection
 
-    def is_point_in_hexagon(x: float, y: float, cx: float, cy: float, size: float) -> bool:
+    def is_point_in_hexagon(
+        x: float, y: float, cx: float, cy: float, size: float, orientation: str
+    ) -> bool:
         """Decide whether the point x, y is inside the hexagon defined by its center (cx, cy) and
         its size
         Formula based on the Ray Casting method
@@ -136,7 +165,7 @@ def _(hexagon_points):
         the polygon that it passes through. Odd number → interior ; even number → outside.
         """
 
-        hexa_extremity = hexagon_points(cx, cy, size)
+        hexa_extremity = hexagon_points(cx, cy, size, orientation)
 
         inside = False
         j = len(hexa_extremity) - 1
@@ -145,14 +174,7 @@ def _(hexagon_points):
             xi, yi = hexa_extremity[i]
             xj, yj = hexa_extremity[j]
 
-            if ray_intersects_edge(
-                x,
-                y,
-                xi,
-                yi,
-                xj,
-                yj,
-            ):
+            if ray_intersects_edge(x, y, xi, yi, xj, yj):
                 inside = not inside
                 # number of even crossings → False
                 # number of odd crossings → True
@@ -166,14 +188,9 @@ def _(hexagon_points):
     y_True = [2, 14, 16, 16, 0, 10, 8]
 
     for k in range(len(x_False)):
-        assert is_point_in_hexagon(x_True[k], y_True[k], 4.96, 8.68, 10)
-        assert is_point_in_hexagon(x_False[k], y_False[k], 4.96, 8.68, 10)
+        assert is_point_in_hexagon(x_True[k], y_True[k], 4.96, 8.68, 10, "pointy")
+        assert not is_point_in_hexagon(x_False[k], y_False[k], 4.96, 8.68, 10, "pointy")
     return (is_point_in_hexagon,)
-
-
-"""@app.cell
-def _(image):
-    image.size"""
 
 
 @app.cell
@@ -183,19 +200,28 @@ def _(Image, image, is_point_in_hexagon, sqrt):
         cx: float,
         cy: float,
         size: float,
+        orientation: str,
     ) -> tuple[int, int, int]:
         """Sample the color for the hexagon with center at position (cx, cy)"""
         pixels: list[tuple[int, int, int]] = []
 
-        min_x = max(0, int(cx - sqrt(3) * size / 2))
-        max_x = min(image.width - 1, int(cx + sqrt(3) * size / 2))
+        if orientation == "pointy":
+            min_x = max(0, int(cx - sqrt(3) * size / 2))
+            max_x = min(image.width - 1, int(cx + sqrt(3) * size / 2))
 
-        min_y = max(0, int(cy - size))
-        max_y = min(image.height - 1, int(cy + size))
+            min_y = max(0, int(cy - size))
+            max_y = min(image.height - 1, int(cy + size))
+
+        else:
+            min_x = max(0, int(cx - size))
+            max_x = min(image.width - 1, int(cx + size))
+
+            min_y = max(0, int(cy - sqrt(3) * size / 2))
+            max_y = min(image.height - 1, int(cy + sqrt(3) * size / 2))
 
         for x in range(min_x, max_x + 1):
             for y in range(min_y, max_y + 1):
-                if is_point_in_hexagon(x, y, cx, cy, size):
+                if is_point_in_hexagon(x, y, cx, cy, size, orientation):
                     pixels.append(image.getpixel((x, y)))
 
         if len(pixels) == 0:  # If there is not a single point in the hexagon
@@ -208,10 +234,10 @@ def _(Image, image, is_point_in_hexagon, sqrt):
         return red, green, blue
 
     # It will be hard to test, but we can at least test that we got (0,0,0) outside the image
-    assert sample_color(image, 900, -10, 10) == (0, 0, 0)
-    assert sample_color(image, 2000, 1000, 10) == (0, 0, 0)
-    assert sample_color(image, 910, 200, 10) == (0, 0, 0)
-    assert sample_color(image, 300, 525, 10) == (0, 0, 0)
+    assert sample_color(image, 900, -10, 10, "pointy") == (0, 0, 0)
+    assert sample_color(image, 2000, 1000, 10, "pointy") == (0, 0, 0)
+    assert sample_color(image, 910, 200, 10, "pointy") == (0, 0, 0)
+    assert sample_color(image, 300, 525, 10, "pointy") == (0, 0, 0)
     return (sample_color,)
 
 
@@ -231,12 +257,14 @@ def _():
 
 @app.cell
 def _(hexagon_points, rgb_to_hex):
-    def generate_hexagon(cx: float, cy: float, size: float, rgb: tuple[int, int, int]) -> str:
+    def generate_hexagon(
+        cx: float, cy: float, size: float, rgb: tuple[int, int, int], orientation: str
+    ) -> str:
         """Create an hexagon by returning the extremity of the hexagon, and it's color with
         svg format
         ex of output : <polygon points="17.32,(...) 17.32,-10.00" fill="#7f543f" />
         """
-        points = hexagon_points(cx, cy, size)
+        points = hexagon_points(cx, cy, size, orientation)
 
         points_string = " ".join(f"{x:.2f},{y:.2f}" for x, y in points)
 
@@ -249,37 +277,56 @@ def _(hexagon_points, rgb_to_hex):
 
 @app.cell
 def _(Image, generate_hexagon, sample_color, sqrt):
-    def generate_svg(image: Image.Image, size: float) -> str:
+    def generate_svg(image: Image.Image, size: float, orientation: str) -> str:
         """Generate the content of the svg file for the given image"""
 
         width, height = image.size
-
         polygons = []
-        row = 0
 
-        while True:
-            cy = size * (1 + 1.5 * row)
-            if cy >= height + size:  # Out of the image
-                break
+        if orientation == "pointy":
+            row = 0
 
+            while True:
+                cy = size * (1 + 1.5 * row)
+                if cy >= height + size:  # Out of the image
+                    break
+                column = 0
+                while True:
+                    cx = sqrt(3) * size * (column + 0.5 + 0.5 * (row % 2))
+                    if cx >= width + size:  # Out of the image
+                        break
+                    rgb = sample_color(image, cx, cy, size, orientation)
+                    polygon = generate_hexagon(cx, cy, size, rgb, orientation)
+                    polygons.append(polygon)
+                    column += 1
+                row += 1
+
+        else:
             column = 0
 
             while True:
-                cx = sqrt(3) * size * (column + 0.5 + 0.5 * (row % 2))
+                cx = size * (1 + 1.5 * column)
 
-                if cx >= width + size:  # Out of the image
+                if cx >= width + size:
                     break
 
-                rgb = sample_color(
-                    image,
-                    cx,
-                    cy,
-                    size,
-                )
-                polygon = generate_hexagon(cx, cy, size, rgb)
-                polygons.append(polygon)
+                row = 0
+
+                while True:
+                    cy = sqrt(3) * size * (row + 0.5 + 0.5 * (column % 2))
+
+                    if cy >= height + size:
+                        break
+
+                    rgb = sample_color(image, cx, cy, size, orientation)
+                    polygon = generate_hexagon(cx, cy, size, rgb, orientation)
+                    polygons.append(polygon)
+
+                    # Move to the next row.
+                    row += 1
+
+                # Move to the next column.
                 column += 1
-            row += 1
 
         return "\n".join(
             [
@@ -301,16 +348,19 @@ def _(mo):
     mo.md(r"""
  
     """)
+    return
 
 
 @app.cell
 def _(generate_svg, load_image):
-    def convert(input_filename: str, output_filename: str, hex_size: float = 20) -> None:
+    def convert(
+        input_filename: str, output_filename: str, hex_size: float = 20, orientation: str = "pointy"
+    ) -> None:
         """This functions open an image at location 'input_filename',
         and convert it into svg file"""
         image = load_image(input_filename)
 
-        svg_content = generate_svg(image, hex_size)
+        svg_content = generate_svg(image, hex_size, orientation)
 
         with open(output_filename, "w") as f:
             f.write(svg_content)
@@ -320,7 +370,8 @@ def _(generate_svg, load_image):
 
 @app.cell
 def _(convert):
-    convert("img/image.jpg", "img/test3.svg")
+    convert("img/image.jpg", "img/test3.svg", orientation="flat")
+    return
 
 
 if __name__ == "__main__":

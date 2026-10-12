@@ -1,4 +1,4 @@
-"""Command-line interface for fizzbuzz_kata."""
+"""Command-line interface for the python project."""
 
 import argparse
 
