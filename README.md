@@ -26,5 +26,6 @@ uv run convert_multi-kata [image_path] [--save_path] [--orientation] [--size]
 uv run marimo check notebooks/transform_explorer.py --select MW  
 uv sync --locked --all-groups  
 uv build  
+cp dist/a_small_python_project-*.whl notebooks/public/  
 uv run marimo export html-wasm notebooks/transform_explorer.py -o site --mode run  
 uv run python -m http.server -d site  

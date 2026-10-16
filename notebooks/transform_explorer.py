@@ -5,6 +5,7 @@
 #     "pillow>=12.3.0",
 # ]
 # ///
+
 import marimo
 
 __generated_with = "0.25.1"
@@ -21,24 +22,7 @@ def _():
         See an example of the transformer
        """
     )
-    return mo
-
-
-"""
-@app.cell
-def _():
-    src_path = mo.ui.text_area(placeholder="Enter the path to the image you want to process")
-    src_path
-    return
-
-
-@app.cell
-def _():
-    save_path = mo.ui.text_area(placeholder="Enter the path where to store your processed image.
-    !!! Add the .svg atthe end !!!")
-    save_path
-    return
-"""
+    return (mo,)
 
 
 @app.cell
@@ -62,9 +46,7 @@ def _(mo):
     public_dir = mo.notebook_location() / "public"
 
     src_path = str(public_dir / "img" / "image.jpg")
-    save_path = str(public_dir / "image2.svg")
-
-    return src_path, save_path
+    return (src_path,)
 
 
 @app.cell
@@ -87,9 +69,19 @@ def _(img):
 
 @app.cell
 def _(mo):
-    size_hexagon = mo.ui.slider(1, 200, value=20, label="Size of the hexagon")
+    size_hexagon = mo.ui.slider(1, 50, value=20, label="Size of the hexagon")
     size_hexagon
     return (size_hexagon,)
+
+
+@app.cell
+def _(mo):
+    # https://docs.marimo.io/api/inputs/multiselect/#marimo.ui.multiselect
+    orientation_hexa = mo.ui.multiselect(
+        options=["Flat-top", "Pointy-top"], label="Which orientation do you want ?"
+    )
+    orientation_hexa
+    return (orientation_hexa,)
 
 
 @app.cell
@@ -99,18 +91,19 @@ def _():
 
 
 @app.cell
-def _(img, size_hexagon):
-    from a_small_python_project.png2svg import generate_svg
+def _(img, orientation_hexa, size_hexagon):
+    from a_small_python_project.png2svg_multi_orientation import generate_svg_multi
 
-    svg_content = generate_svg(img, size_hexagon.value)
+    orientation = "flat"
+    if orientation_hexa.value != [] and orientation_hexa.value[0] == "Pointy-top":
+        orientation = "pointy"
 
+    svg_content = generate_svg_multi(img, size_hexagon.value, orientation)
     return (svg_content,)
 
 
 @app.cell
-def _(
-    mo, svg_content
-):  # Print the content of the SVG file, it is better than trying to import the converted image
+def _(mo, svg_content):
     mo.Html(svg_content)
     return
 
