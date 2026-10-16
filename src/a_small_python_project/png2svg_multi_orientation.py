@@ -20,8 +20,7 @@ def hexagon_center_multi(
 ) -> tuple[float, float]:
     """Given a row, a column and the size of the hexagon (size), return the center
     of the hexagon for this location and size
-    Look at the 'Notes.pdf' file in the 'img' folder tounderstand the formula.
-    I chose the pointy top orientation.
+    Look at the 'img/Notes.pdf' file to understand the formula.
     Returns:
         tuple[float, float]: Center of the hexagon at a given (row, column)
     """
@@ -39,9 +38,7 @@ def hexagon_points_multi(
     cx: float, cy: float, size: float, orientation: str
 ) -> list[tuple[float, float]]:
     """Calculate the extremitiy points of an hexagon, given the center of this hexagon and its size.
-    Order of the points : start at the bottom right (pointy top orientation), and turns by the left
-    Taken from https://www.redblobgames.com/grids/hexagons/, "Angles" section. I chose the pointy
-    top orientation.
+    Code taken from https://www.redblobgames.com/grids/hexagons/, "Angles" section.
 
     Returns:
         list[tuple[float, float]]: The six points which represent the extremity of the hexagon
@@ -101,7 +98,8 @@ def is_point_in_hexagon_multi(
         cx (float): x value for the center of the hexagon
         cy (float): y value for the center of the hexagon
         size (float): size of the hexagon as defined here :
-                    https://www.redblobgames.com/grids/hexagons/ (pointy top orientation)
+                    https://www.redblobgames.com/grids/hexagons/
+                    (the orientation chosen has no impact on the result)
 
     Returns:
         bool: if the point is inside the hexagon or not
@@ -139,7 +137,7 @@ def sample_color_multi(
         cx (float): x value for the center of the hexagon
         cy (float): y value for the center of the hexagon
         size (float): size of the hexagon as defined here :
-                    https://www.redblobgames.com/grids/hexagons/ (pointy top orientation)
+                    https://www.redblobgames.com/grids/hexagons/
 
     Returns:
         tuple[int, int, int]: RGB values which average the color of the pixels inside

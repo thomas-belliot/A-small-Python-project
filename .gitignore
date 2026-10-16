@@ -1,2 +1,4 @@
 .python-version
 site
+src/a_small_python_project/__pycache__
+tests/__pycache__

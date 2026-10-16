@@ -15,13 +15,6 @@ def _():
 
 
 @app.cell
-def _():
-    # Load the image
-    # image = Image.open("../img/image.jpg")
-    return
-
-
-@app.cell
 def _(Image):
     def load_image(filename: str) -> Image.Image:
         """Load an image"""

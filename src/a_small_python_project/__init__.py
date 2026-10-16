@@ -1,4 +1,10 @@
-"""Python project package — see png2svg.py for the implementation.
+"""Python project package"""
+
+__version__ = "0.1.0"
+
+"""
+Note: Because of a problem when building the website, this file has been modified and
+all the code below has been removed.
 
 from a_small_python_project.png2svg import (
     convert as convert,
@@ -74,7 +80,3 @@ all = [
 
 version = "0.1.0"
 """
-
-"""Conversion d'images en mosaïques hexagonales."""
-
-__version__ = "0.1.0"

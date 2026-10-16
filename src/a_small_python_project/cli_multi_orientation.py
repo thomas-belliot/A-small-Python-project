@@ -1,4 +1,6 @@
-"""Command-line interface for the python project."""
+"""Command-line interface for the Python project. Allows you to specify the original image location,
+the size and the orientation of the hexagons, as well as the save path for the new svg file.
+The way to use the command-line interface is detailed in the README.md file."""
 
 import argparse
 
