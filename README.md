@@ -13,8 +13,14 @@ uv run mypy src
 uv run pytest --cov=src --cov-report=term-missing  
 
 ### *How to convert an image from the command line interface :*  
-uv run convert-kata [image_path] [--output_path]  
-/!\ Do not forget to add the '.svg' at the end of the output_path  
+This first command will use the **pointy top orientation**, with a **size of 20** :  
+uv run convert-kata [image_path] [--save_path]  
+
+This command is more general and allows to choose between "pointy" or "flat" orientation, and the size of your choice :  
+uv run convert_multi-kata [image_path] [--save_path] [--orientation] [--size]  
+
+/!\ Do not forget to **add the '.svg' at the end of the save_path**  
+*Example of use* : `uv run convert_multi-kata img/image.jpg --save_path="img/test3.svg" --orientation="pointy" --size=30`
 
 ### *How to run the website locally :*  
 uv run marimo check notebooks/transform_explorer.py --select MW  
